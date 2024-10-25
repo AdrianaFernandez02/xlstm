@@ -1,7 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Maximilian Beck
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Tuple, Dict
 
 import torch
 from torch import nn
@@ -79,7 +79,7 @@ class xLSTMBlock(nn.Module):
             x = x + self.ffn(self.ffn_norm(x), **kwargs)
         return x
 
-    def step(self, x: torch.Tensor, **kwargs) -> tuple[torch.Tensor, dict[str, tuple[torch.Tensor, ...]]]:
+    def step(self, x: torch.Tensor, **kwargs) -> Tuple[torch.Tensor, Dict[str, Tuple[torch.Tensor, ...]]]:
         x_xlstm, xlstm_state = self.xlstm.step(self.xlstm_norm(x), **kwargs)
         x = x + x_xlstm
         if self.ffn is not None:

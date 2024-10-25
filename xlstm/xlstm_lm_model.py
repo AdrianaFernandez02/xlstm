@@ -1,7 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Maximilian Beck
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Sequence, Tuple, Dict
 
 import torch
 from torch import nn
@@ -54,15 +54,15 @@ class xLSTMLMModel(WeightDecayOptimGroupMixin, nn.Module):
         return logits
 
     def step(
-        self, idx: torch.Tensor, state: dict[str, dict[str, tuple[torch.Tensor, ...]]] = None, **kwargs
-    ) -> tuple[torch.Tensor, dict[str, dict[str, tuple[torch.Tensor, ...]]]]:
+        self, idx: torch.Tensor, state: Dict[str, Dict[str, Tuple[torch.Tensor, ...]]] = None, **kwargs
+    ) -> Tuple[torch.Tensor, Dict[str, Dict[str, Tuple[torch.Tensor, ...]]]]:
         x = self.token_embedding(idx)
         x = self.emb_dropout(x)
         x, state = self.xlstm_block_stack.step(x, state=state, **kwargs)
         logits = self.lm_head(x)
         return logits, state
 
-    def _create_weight_decay_optim_groups(self, **kwargs) -> tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
+    def _create_weight_decay_optim_groups(self, **kwargs) -> Tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
         weight_decay, no_weight_decay = super()._create_weight_decay_optim_groups(**kwargs)
         # remove token embedding and add it to the correct group, accrording to the config
         weight_decay = list(weight_decay)
@@ -71,7 +71,7 @@ class xLSTMLMModel(WeightDecayOptimGroupMixin, nn.Module):
             if weight_decay[idx - removed] is self.token_embedding.weight:
                 weight_decay.pop(idx - removed)
                 removed += 1
-        weight_decay = tuple(weight_decay)
+        weight_decay = Tuple(weight_decay)
         if self.config.weight_decay_on_embedding:
             weight_decay += (self.token_embedding.weight,)
         else:

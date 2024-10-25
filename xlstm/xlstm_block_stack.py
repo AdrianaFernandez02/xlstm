@@ -2,7 +2,7 @@
 # Maximilian Beck
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Literal, Optional, Union
+from typing import Literal, Optional, Union, List, Dict, Tuple
 
 import torch
 from torch import nn
@@ -26,7 +26,7 @@ class xLSTMBlockStackConfig:
 
     # The block indices at which sLSTM blocks are placed.
     # Indexing starts from 0.
-    slstm_at: Union[list[int], Literal["all"]] = field(default_factory=list)
+    slstm_at: Union[List[int], Literal["all"]] = field(default_factory=list)
 
     # _block_map is a string that specifies which block is used at which position
     # 0: use the mLSTM block
@@ -34,7 +34,7 @@ class xLSTMBlockStackConfig:
     _block_map: str = None
 
     @property
-    def block_map(self) -> list[int]:
+    def block_map(self) -> List[int]:
         return list(map(int, self._block_map.split(",")))
 
     def _create_block_map(self) -> str:
@@ -124,8 +124,8 @@ class xLSTMBlockStack(nn.Module):
         return x
 
     def step(
-        self, x: torch.Tensor, state: dict[str, dict[str, tuple[torch.Tensor, ...]]] = None
-    ) -> tuple[torch.Tensor, dict[str, dict[str, tuple[torch.Tensor, ...]]]]:
+        self, x: torch.Tensor, state: Dict[str, Dict[str, Tuple[torch.Tensor, ...]]] = None
+    ) -> Tuple[torch.Tensor, Dict[str, Dict[str, Tuple[torch.Tensor, ...]]]]:
         if state is None:
             state = {}
 

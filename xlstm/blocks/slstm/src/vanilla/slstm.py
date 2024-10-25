@@ -3,6 +3,7 @@
 
 import torch
 from torch.nn.functional import logsigmoid
+from typing import Tuple, Dict
 
 
 def slstm_forward_pointwise(
@@ -10,8 +11,8 @@ def slstm_forward_pointwise(
     Ry: torch.Tensor,  # dim [B, 4*H]
     b: torch.Tensor,  # dim [1, 4*H]
     states: torch.Tensor,  # dim [4, B, H]
-    constants: dict[str, float],
-) -> tuple[
+    constants: Dict[str, float],
+) -> Tuple[
     torch.Tensor,
     torch.Tensor,
 ]:

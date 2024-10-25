@@ -1,14 +1,14 @@
 # Copyright (c) NXAI GmbH and its affiliates 2023
 # Korbininan Pöppel
 
-from typing import Callable
+from typing import Callable, Tuple, Dict
 import torch
 
 from .slstm import slstm_forward_pointwise as slstm_forward_pointwise_slstm
 from .lstm import slstm_forward_pointwise as slstm_forward_pointwise_lstm
 
 
-slstm_pointwise_function_registry: dict[str, Callable] = {
+slstm_pointwise_function_registry: Dict[str, Callable] = {
     "slstm": slstm_forward_pointwise_slstm,
     "lstm": slstm_forward_pointwise_lstm,
 }
@@ -19,12 +19,12 @@ def slstm_forward(
     states: torch.Tensor,  # [4, B, H] only the first is used for recurrence!
     R: torch.Tensor,  # [K, R*H, H] - K num_heads
     b: torch.Tensor,  # [T*H]
-    pointwise_forward: Callable[
-        tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, dict[str, float]],
-        tuple[torch.Tensor, torch.Tensor],
-    ],
-    constants: dict[str, float] = {},
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    pointwise_forward,#: Callable[
+    #     Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, float]],
+    #     Tuple[torch.Tensor, torch.Tensor],
+    # ],
+    constants: Dict[str, float] = {},
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     num_states = states.shape[0]
     sequence_dim = x.shape[0]
     num_gates_r = (
@@ -79,12 +79,12 @@ def slstm_forward_step(
     states: torch.Tensor,  # [4, B, H] only the first is used for recurrence!
     R: torch.Tensor,  # [K, R*H, H] - K num_heads
     b: torch.Tensor,  # [T*H]
-    pointwise_forward: Callable[
-        tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, dict[str, float]],
-        tuple[torch.Tensor, torch.Tensor],
-    ],
-    constants: dict[str, float] = {},
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    pointwise_forward, #: Callable[
+    #     Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, float]],
+    #     Tuple[torch.Tensor, torch.Tensor],
+    # ],
+    constants: Dict[str, float] = {},
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     num_states = states.shape[0]
     sequence_dim = x.shape[0]
     num_gates_r = (

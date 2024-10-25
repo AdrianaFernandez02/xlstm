@@ -3,7 +3,7 @@
 import math
 from abc import ABC
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Sequence, Tuple, List
 
 from torch import nn
 
@@ -33,8 +33,8 @@ class WeightDecayOptimGroupMixin(nn.Module, ABC):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def get_weight_decay_optim_groups(self, **kwargs) -> tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
-        """Return a tuple of two sequences, one for parameters with weight decay and one for parameters without weight decay.
+    def get_weight_decay_optim_groups(self, **kwargs) -> Tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
+        """Return a Tuple of two sequences, one for parameters with weight decay and one for parameters without weight decay.
         Performs checks to ensure that each parameter is only in one of the two sequences.
         """
         weight_decay, no_weight_decay = self._create_weight_decay_optim_groups(**kwargs)
@@ -58,8 +58,8 @@ class WeightDecayOptimGroupMixin(nn.Module, ABC):
 
         return weight_decay, no_weight_decay
 
-    def get_weight_decay_optim_group_param_names(self, **kwargs) -> tuple[Sequence[str], Sequence[str]]:
-        """Return a tuple of two sequences, one for parameter names with weight decay and one for parameter names without weight decay.
+    def get_weight_decay_optim_group_param_names(self, **kwargs) -> Tuple[Sequence[str], Sequence[str]]:
+        """Return a Tuple of two sequences, one for parameter names with weight decay and one for parameter names without weight decay.
         Performs checks to ensure that each parameter is only in one of the two sequences.
         """
 
@@ -74,8 +74,8 @@ class WeightDecayOptimGroupMixin(nn.Module, ABC):
         names_no_weight_decay = [pn for pn, p in self.named_parameters() if _is_in_sequence(p, no_weight_decay)]
         return names_weight_decay, names_no_weight_decay
 
-    def _create_weight_decay_optim_groups(self, **kwargs) -> tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
-        """Return a tuple of two sequences, one for parameters with weight decay and one for parameters without weight decay.
+    def _create_weight_decay_optim_groups(self, **kwargs) -> Tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
+        """Return a Tuple of two sequences, one for parameters with weight decay and one for parameters without weight decay.
         Default separation:
         - weight decay: all parameters which have > 1 dimensions.
         - no weight decay: all parameters which have = 1 dimension, e.g. biases.
@@ -92,11 +92,11 @@ class WeightDecayOptimGroupMixin(nn.Module, ABC):
                 else:
                     no_decay.add(param)
 
-        return tuple(decay), tuple(no_decay)
+        return Tuple(decay), Tuple(no_decay)
 
     def _get_weight_decay_optim_groups_for_modules(
-        self, modules: list["WeightDecayOptimGroupMixin"], **kwargs
-    ) -> tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
+        self, modules: List["WeightDecayOptimGroupMixin"], **kwargs
+    ) -> Tuple[Sequence[nn.Parameter], Sequence[nn.Parameter]]:
         weight_decay, no_weight_decay = (), ()
         for module in modules:
             wd, nwd = module.get_weight_decay_optim_groups(**kwargs)

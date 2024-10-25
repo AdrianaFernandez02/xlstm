@@ -1,6 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Maximilian Beck
 from dataclasses import dataclass
+from typing import Tuple, Dict
 
 import torch
 from torch import nn
@@ -127,9 +128,9 @@ class mLSTMLayer(nn.Module):
     def step(
         self,
         x: torch.Tensor,
-        mlstm_state: tuple[torch.Tensor, torch.Tensor, torch.Tensor] = None,
-        conv_state: tuple[torch.Tensor] = None,
-    ) -> tuple[torch.Tensor, dict[str, tuple[torch.Tensor, ...]]]:
+        mlstm_state: Tuple[torch.Tensor, torch.Tensor, torch.Tensor] = None,
+        conv_state: Tuple[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, Dict[str, Tuple[torch.Tensor, ...]]]:
         B, S, _ = x.shape
 
         # up-projection

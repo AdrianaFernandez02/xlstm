@@ -1,7 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Korbinian Poeppel, Maximilian Beck
 from argparse import ArgumentParser
-from typing import Type
+from typing import Type, Dict
 
 import torch
 import torch.optim as optim
@@ -18,11 +18,11 @@ from tqdm import tqdm
 
 from xlstm.xlstm_lm_model import xLSTMLMModel, xLSTMLMModelConfig
 
-dataset_registry: dict[str, Type[DataGen]] = {
+dataset_registry: Dict[str, Type[DataGen]] = {
     "form_language": FormLangDatasetGenerator
 }
 
-torch_dtype_map: dict[str, torch.dtype] = {
+torch_dtype_map: Dict[str, torch.dtype] = {
     "float32": torch.float32,
     "bfloat16": torch.bfloat16,
     "float16": torch.float16,

@@ -1,7 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Maximilian Beck, Korbinian Pöppel
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Tuple, Set
 
 import torch
 
@@ -26,7 +26,7 @@ def conv1d_step(
     conv_state: torch.Tensor,
     conv1d_weight: torch.Tensor,
     conv1d_bias: torch.Tensor = None,
-) -> tuple[torch.Tensor, torch.Tensor]:
+) -> Tuple[torch.Tensor, torch.Tensor]:
     """
     B: batch size
     S: sequence length
@@ -97,7 +97,7 @@ class CausalConv1d(nn.Module):
 
     def _create_weight_decay_optim_groups(
         self,
-    ) -> tuple[set[nn.Parameter], set[nn.Parameter]]:
+    ) -> Tuple[Set[nn.Parameter], Set[nn.Parameter]]:
         if self.config.kernel_size == 0:
             return (), ()
         else:
@@ -131,8 +131,8 @@ class CausalConv1d(nn.Module):
     def step(
         self,
         x: torch.Tensor,
-        conv_state: tuple[torch.Tensor] = None,
-    ) -> tuple[torch.Tensor, tuple[torch.Tensor]]:
+        conv_state: Tuple[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, Tuple[torch.Tensor]]:
 
         if self.config.kernel_size == 0:
             return x, conv_state

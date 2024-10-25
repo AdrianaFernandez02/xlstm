@@ -1,4 +1,3 @@
-name: xlstm
 channels:
   - pytorch
   - nvidia

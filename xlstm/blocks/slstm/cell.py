@@ -3,7 +3,7 @@
 import logging
 import os
 from dataclasses import dataclass, field
-from typing import Optional, Literal
+from typing import Optional, Literal, Tuple
 from pathlib import Path
 
 import torch
@@ -483,9 +483,9 @@ class sLSTMCellBase(nn.Module):
             )
         return any(is_cuda)
 
-    def step(
-        self, input: torch.Tensor, state: torch.Tensor
-    ) -> tuple[torch.Tensor, torch.Tensor]:
+    def step(self, input, state):
+    #     self, input: torch.Tensor, state: torch.Tensor
+    # ) -> Tuple[torch.Tensor, torch.Tensor]:
         self._check_input(input)
         input = self._permute_input(input)
         states = self._get_state(input, state)

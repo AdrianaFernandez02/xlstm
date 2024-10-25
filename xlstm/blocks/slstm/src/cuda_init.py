@@ -2,7 +2,7 @@
 # Korbinian Poeppel
 
 import os
-from typing import Sequence, Union
+from typing import Sequence, Union, Dict, Tuple
 import logging
 
 import time
@@ -14,10 +14,10 @@ from torch.utils.cpp_extension import load as _load
 LOGGER = logging.getLogger(__name__)
 
 
-def defines_to_cflags(defines=Union[dict[str, Union[int, str]], Sequence[tuple[str, Union[str, int]]]]):
+def defines_to_cflags(defines=Union[Dict[str, Union[int, str]], Sequence[Tuple[str, Union[str, int]]]]):
     cflags = []
     print(defines)
-    if isinstance(defines, dict):
+    if isinstance(defines, Dict):
         defines = defines.items()
     for key, val in defines:
         cflags.append(f"-D{key}={str(val)}")

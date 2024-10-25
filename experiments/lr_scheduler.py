@@ -2,6 +2,7 @@
 # Maximilian Beck
 import math
 from abc import abstractmethod
+from typing import List
 
 from torch.optim import lr_scheduler
 
@@ -11,7 +12,7 @@ class BaseLRScheduler(lr_scheduler._LRScheduler):
         super().__init__(optimizer, last_epoch)
 
     @abstractmethod
-    def get_lr(self) -> list[float]:
+    def get_lr(self) -> List[float]:
         """Returns the current learning rate for each parameter group."""
         raise NotImplementedError
 
@@ -44,7 +45,7 @@ class LinearWarmupCosineAnnealing(BaseLRScheduler):
         else:
             return min_lr
 
-    def get_lr(self) -> list[float]:
+    def get_lr(self) -> List[float]:
         """Returns the current learning rate for each parameter group."""
         step = self.last_epoch
         return (

@@ -1,6 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Maximilian Beck
 from dataclasses import dataclass
+from typing import Tuple
 
 import torch
 from torch import nn
@@ -64,7 +65,7 @@ class mLSTMCell(nn.Module):
             values=v,
             igate_preact=igate_preact,
             fgate_preact=fgate_preact,
-            lower_triangular_matrix=self.causal_mask,
+            lower_triangular_matrix=self.causal_mask,#torch.tril(torch.ones(S, S, dtype=torch.bool).to(q.device))#self.causal_mask,
         )  # (B, NH, S, DH)
 
         h_state_norm = self.outnorm(h_state)  # (B, NH, S, DH)
@@ -77,9 +78,9 @@ class mLSTMCell(nn.Module):
         q: torch.Tensor,
         k: torch.Tensor,
         v: torch.Tensor,
-        mlstm_state: tuple[torch.Tensor, torch.Tensor, torch.Tensor] = None,
+        mlstm_state: Tuple[torch.Tensor, torch.Tensor, torch.Tensor] = None,
         **kwargs,
-    ) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
+    ) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
         B, S, _ = q.shape  # (B, S, H)
         assert S == 1, f"mLSTMCell.step only supports sequence length S=1, but got S={S}."
 

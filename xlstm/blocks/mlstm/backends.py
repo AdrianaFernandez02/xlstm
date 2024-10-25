@@ -1,6 +1,7 @@
 # Copyright (c) NXAI GmbH and its affiliates 2024
 # Maximilian Beck
 import math
+from typing import Tuple
 
 import torch
 
@@ -100,7 +101,7 @@ def recurrent_step_stabilized_simple(
     fgate_preact: torch.Tensor,
     eps: float = 1e-6,
     **kwargs,
-) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
+) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
     """This is a single step of the mLSTM operation in recurrent form.
 
     Args:
